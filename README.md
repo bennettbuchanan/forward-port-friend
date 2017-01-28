@@ -15,4 +15,4 @@ the `-p` or `--path` option to specify its location. For example:
 `python forward_port.py scality_repository source_branch target_branch -p
 ~/repos`
 
-Dependencies: `pip install GitPython`
+Install dependencies with pip: `pip install -r requirements.txt'

@@ -16,3 +16,8 @@ the `-p` or `--path` option to specify its location. For example:
 ~/repos`
 
 Install dependencies with pip: `pip install -r requirements.txt'
+
+## Testing
+
+The testing suite uses [pytest](http://docs.pytest.org/en/latest/contents.html).
+Run tests from the root directory: `pytest`

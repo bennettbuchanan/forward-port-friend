@@ -1,37 +1,25 @@
-from optparse import OptionParser
 import sys
 import git
+from utils.parser import parse_args
+from utils.repo_handler import get_repo_object
 
-usage = "usage: %prog scality_repository source_branch target_branch"
-parser = OptionParser(usage=usage)
-parser.add_option("-c", "--continue", action="store_true", dest="continue_fp",
-                  help="continue forward porting after resolved conflicts")
-parser.add_option("-p", "--path", dest="path_to_repo",
-                  help="specify the path to a pre-existing repository to use")
-
-(options, args) = parser.parse_args()
+(options, args) = parse_args(sys.argv[1:])
 
 # Ensure that all positional arguments are given.
 if len(args) != 3:
     parser.print_help()
 
-repository = args[0]
+repo_name = args[0]
 source_branch = args[1]
 target_branch = args[2]
 
-# TODO: Add support for the user to specify a path to a pre-existing repo.
-if options.path_to_repo:
-    sys.exit("The path option is not yet supported.")
-else:
-    try:
-        print "Cloning from remote repository."
-        repo = git.Repo.clone_from("https://github.com/scality/" + repository,
-                                   "./" + repository, branch=target_branch)
-    except git.exc.GitCommandError as e:
-        # Get the git error message from stderr and output the message without
-        # extraneous characters.
-        message = e.stderr.find("fatal:")
-        sys.exit(e.stderr[message:-2])
+try:
+    repo = get_repo_object(repo_name, target_branch, options)
+except git.exc.GitCommandError as e:
+    # Get the git error message from stderr and output the message without
+    # extraneous characters.
+    message = e.stderr.find("fatal:")
+    sys.exit(e.stderr[message:-2])
 
 forward_branch = "forward/" + source_branch
 git = repo.git
